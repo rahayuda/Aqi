@@ -1,48 +1,180 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
   <style>
     .container {
-      border: 2px solid black; /* Menambahkan border dengan ketebalan 2px dan warna hitam */
-      padding: 10px; /* Opsi: menambahkan padding agar kontennya tidak langsung berdekatan dengan border */
+      border: 2px solid #343a40;
+    }
+
+    .media img {
+      border-radius: 5px;
     }
   </style>
-
-  <title>Air Quality index</title>
+  <title>Air Quality Index</title>
 </head>
 <body>
 
-  <div class="container mt-5 p-4">
-    Air Quality Index
-    <hr>
+  <div class="p-4">
 
-    <div class="media mt-2">
-      <img src="pollution3.jpg" alt="Alt Text" width="60%">
+    <div class="container mt-4 p-4">
+      <h5>Air Quality Index</h5>
+      <br>
 
-      <div class="media-body ml-4">
-        <h5 class="mt-0">Media heading</h5>
-        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+      <div class="media">
+        <img src="pollution3.jpg" alt="Alt Text" class="img-fluid" width="60%">
+        <div class="media-body ml-4">
+          <h5 id="category" class="mt-0 text-lg"></h5>
+          <p>
+            <div id="usAqiValue"></div>
+            <br>
+            <img src="pollution3.jpg" alt="Alt Text" class="img-fluid" width="70%">
+            <br><br>
+            <div id="coordinate"></div>
+            <div id="currentTime"></div> 
+          </p>
+        </div>
+      </div>
+
+      <br>
+    </div>
+
+    <div class="container mt-4 mb-4 p-4">
+      <h5 class="mb-3">Forecast</h5>
+      <div class="table table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Time</th>
+              <th scope="col">Aqi</th>
+              <th scope="col">Category</th>
+              <th scope="col">Caution</th>
+            </tr>
+          </thead>
+          <tbody id="forecastTableBody"></tbody>
+        </table>
       </div>
     </div>
 
-    <hr>
   </div>
 
-  <div class="container mt-3 p-4">
-    Forcast
-  </div>
+  <script>
+    var api_url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=30.0626&longitude=31.2497&current=us_aqi&hourly=us_aqi&forecast_days=1';
 
+    fetch(api_url)
+    .then(response => response.json())
+    .then(weatherData => {
+      // Access specific data under the "current" key
+      const currentTimeString = weatherData.current.time;
+      const usAqiValue = weatherData.current.us_aqi;
+      const latitude = weatherData.latitude;
+      const longitude = weatherData.longitude;
 
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      // Format date and time
+      const formattedDateTime = formatDateTime(currentTimeString);
+
+      // Determine and display the air quality category
+      const category = determineCategory(usAqiValue);
+
+      // Determine and display caution information
+      const caution = determineCaution(category);
+
+      // Display the specific data in the media-body
+      document.getElementById('category').innerText = category;
+      document.getElementById('usAqiValue').innerText = 'Aqi ' + usAqiValue + ', ' + caution;
+      document.getElementById('coordinate').innerText = 'Latitude: ' + latitude + ', Longitude: ' + longitude;
+      document.getElementById('currentTime').innerText = 'Time: ' + formattedDateTime;
+
+      // Populate the forecast table
+      populateForecastTable(weatherData.hourly);
+    })
+    .catch(error => {
+      console.error('Error fetching weather data:', error);
+    });
+
+    // Function to format date and time
+    function formatDateTime(dateTimeString) {
+      const dateTime = new Date(dateTimeString);
+      const formattedDate = `${dateTime.getFullYear()}-${padZero(dateTime.getMonth() + 1)}-${padZero(dateTime.getDate())}`;
+      const formattedTime = `${padZero(dateTime.getHours())}:${padZero(dateTime.getMinutes())}`;
+      return `${formattedDate}, ${formattedTime}`;
+    }
+
+    // Function to pad single-digit numbers with a leading zero
+    function padZero(number) {
+      return number < 10 ? `0${number}` : number;
+    }
+
+    // Function to determine the air quality category
+    function determineCategory(aqiValue) {
+      if (aqiValue >= 0 && aqiValue <= 50) {
+        return 'Good';
+      } else if (aqiValue >= 51 && aqiValue <= 100) {
+        return 'Moderate';
+      } else if (aqiValue >= 101 && aqiValue <= 150) {
+        return 'Unhealthy for Sensitive Groups';
+      } else if (aqiValue >= 151 && aqiValue <= 200) {
+        return 'Unhealthy';
+      } else if (aqiValue >= 201 && aqiValue <= 300) {
+        return 'Very Unhealthy';
+      } else if (aqiValue >= 301 && aqiValue <= 500) {
+        return 'Hazardous';
+      } else {
+        return 'Unknown';
+      }
+    }
+
+    // Function to determine caution information based on air quality category
+    function determineCaution(category) {
+      switch (category) {
+        case 'Good':
+          return 'Air quality is considered satisfactory, and air pollution poses little or no risk.';
+        case 'Moderate':
+          return 'Air quality is acceptable; however, some pollutants may be a concern for a very small number of people who are unusually sensitive to air pollution.';
+        case 'Unhealthy for Sensitive Groups':
+          return 'Members of sensitive groups (e.g., individuals with respiratory or heart conditions, children, and older adults) may experience health effects.';
+        case 'Unhealthy':
+          return 'Everyone may begin to experience health effects, and members of sensitive groups may experience more serious health effects.';
+        case 'Very Unhealthy':
+          return 'Health alert: everyone may experience more serious health effects.';
+        case 'Hazardous':
+          return 'Health warnings of emergency conditions. The entire population is likely to be affected.';
+        default:
+          return 'Unknown';
+      }
+    }
+
+    // Function to populate the forecast table
+    function populateForecastTable(hourlyData) {
+      const tableBody = document.getElementById('forecastTableBody');
+
+      for (let i = 0; i < hourlyData.time.length; i++) {
+        const row = tableBody.insertRow();
+        const timeCell = row.insertCell(0);
+        const aqiCell = row.insertCell(1);
+        const categoryCell = row.insertCell(2);
+        const cautionCell = row.insertCell(3);
+
+        timeCell.textContent = formatDateTime(hourlyData.time[i]);
+        aqiCell.textContent = hourlyData.us_aqi[i];
+        
+        // Determine and display the air quality category for forecast
+        const forecastCategory = determineCategory(hourlyData.us_aqi[i]);
+        categoryCell.textContent = forecastCategory;
+
+        // Determine and display caution information
+        const forecastCaution = determineCaution(forecastCategory);
+        cautionCell.textContent = forecastCaution.length > 50 ? forecastCaution.substring(0, 50) + '...' : forecastCaution;
+      }
+    }
+  </script>
+
+  <!-- Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 </body>
 </html>
