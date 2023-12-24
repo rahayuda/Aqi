@@ -61,7 +61,31 @@
   </div>
 
   <script>
-    var api_url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=30.0626&longitude=31.2497&current=us_aqi&hourly=us_aqi&forecast_days=1';
+// Mendeteksi geolokasi pengguna
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(function(position) {
+    // Mendapatkan latitude dan longitude dari posisi saat ini
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+
+    // Menentukan jumlah hari untuk ramalan kualitas udara
+    var forecast_days = 1;
+
+    // Membuat URL dengan nilai yang telah diatur
+    var api_url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + latitude + '&longitude=' + longitude + '&current=us_aqi&hourly=us_aqi&forecast_days=' + forecast_days;
+
+    // Lakukan sesuatu dengan URL, misalnya, kirim ke server atau tampilkan di konsol
+    console.log(api_url);
+    
+  }, function(error) {
+    // Jika terjadi kesalahan dalam mendapatkan geolokasi
+    console.error('Error getting geolocation:', error.message);
+  });
+} else {
+  // Jika browser tidak mendukung geolokasi
+  console.error('Geolocation is not supported by this browser.');
+}
+
 
     fetch(api_url)
     .then(response => response.json())
