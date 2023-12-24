@@ -18,7 +18,7 @@
 
     <div class="container mt-4 p-4">
       <h5>Air Quality Index</h5>
-      <br>
+      <hr>
 
       <div class="row">
         <div class="col-sm mb-4">
@@ -26,19 +26,18 @@
         </div>
         <div class="col-sm-4">
           <h5 id="category" class="mt-0 text-lg"></h5>
+          <hr>
           <p>
-            <div id="usAqiValue"></div>
-            <div id="backgroundDiv" style="height: 150px; width: 150px; border-radius: 5px; margin-top: 20px;"></div>
-            <br>
-            <div id="coordinate"></div>
-            <div id="currentTime"></div> 
-            <br>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#inputModal">
-              Input Data
-            </button>
+            <div class="p-3" id="backgroundDiv" style="border-radius: 5px; margin-top: 20px;"><div id="usAqiValue"></div></div>            
+            <div class="p-3 mt-2" style="border: 2px solid #343a40; border-radius: 5px; "><div id="coordinate"></div></div>  
+            <div class="p-3 mt-2" style="border: 2px solid #343a40; border-radius: 5px; "><div id="location"></div></div>          
           </p>
-        </div>   
+        </div> 
       </div>
+      <hr>
+      <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#inputModal">
+        Configuration
+      </button>  
     </div>
 
     <div class="container mt-4 mb-4 p-4">
@@ -64,7 +63,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="inputModalLabel">Input Data</h5>
+          <h5 class="modal-title" id="inputModalLabel">Configuration</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -87,7 +86,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" onclick="updateData()">Update</button>
+          <button type="button" class="btn btn-dark" onclick="updateData()">Update</button>
         </div>
       </div>
     </div>
@@ -95,12 +94,47 @@
 
 
   <script>
-    var latitude = -8.65;
-    var longitude = 115.2167;
+
+    var latitude = -8.6352283;
+    var longitude = 115.2164822;
 
     var forecast_days = 1;
 
     var api_url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + latitude + '&longitude=' + longitude + '&current=us_aqi&hourly=us_aqi&timezone=auto&forecast_days=' + forecast_days;
+
+    fetch(api_url)
+    .then(response => response.json())
+    .then(weatherData => {
+      // Access specific data under the "current" key
+      const currentTimeString = weatherData.current.time;
+      const usAqiValue = weatherData.current.us_aqi;
+      const latitude = weatherData.latitude;
+      const longitude = weatherData.longitude;
+
+      // Format date and time
+      const formattedDateTime = formatDateTime(currentTimeString);
+
+      // Determine and display the air quality category
+      const category = determineCategory(usAqiValue);
+
+      // Determine and display caution information
+      const caution = determineCaution(category);
+
+      // Display the specific data in the media-body
+      document.getElementById('category').innerText = category;
+      document.getElementById('usAqiValue').innerText = 'Aqi ' + usAqiValue + ', ' + caution;
+      document.getElementById('coordinate').innerText = 'Latitude: ' + latitude + ', Longitude: ' + longitude + '\n Time: ' + formattedDateTime;
+
+      // Set background color based on usAqiValue
+      setBackgroundColor(usAqiValue);
+
+      // Populate the forecast table
+      populateForecastTable(weatherData.hourly);
+    })
+    .catch(error => {
+      console.error('Error fetching weather data:', error);
+    });
+    
 
     function updateData() {
   // Ambil nilai dari input
@@ -138,53 +172,38 @@
 
       document.getElementById('category').innerText = category;
       document.getElementById('usAqiValue').innerText = 'Aqi ' + usAqiValue + ', ' + caution;
-      document.getElementById('coordinate').innerText = 'Latitude: ' + latitude + ', Longitude: ' + longitude;
-      document.getElementById('currentTime').innerText = 'Time: ' + formattedDateTime;
+      document.getElementById('coordinate').innerText = 'Latitude: ' + latitude + ', Longitude: ' + longitude + '\n Time: ' + formattedDateTime;
 
-      populateForecastTable(weatherData.hourly);
-    })
+            // Set background color based on usAqiValue
+            setBackgroundColor(usAqiValue);
+
+            populateForecastTable(weatherData.hourly);
+          })
   .catch(error => {
     console.error('Error fetching weather data:', error);
   });
 
   // Tutup modal
   $('#inputModal').modal('hide');
-}
 
+      // Fetch location data
+      fetchLocationData();
+    }
 
-fetch(api_url)
-.then(response => response.json())
-.then(weatherData => {
-      // Access specific data under the "current" key
-      const currentTimeString = weatherData.current.time;
-      const usAqiValue = weatherData.current.us_aqi;
-      const latitude = weatherData.latitude;
-      const longitude = weatherData.longitude;
+    function fetchLocationData() {
+      var osm = 'https://nominatim.openstreetmap.org/reverse?lat=' + latitude + '&lon=' + longitude + '&format=json';
 
-      // Format date and time
-      const formattedDateTime = formatDateTime(currentTimeString);
-
-      // Determine and display the air quality category
-      const category = determineCategory(usAqiValue);
-
-      // Determine and display caution information
-      const caution = determineCaution(category);
-
-      // Display the specific data in the media-body
-      document.getElementById('category').innerText = category;
-      document.getElementById('usAqiValue').innerText = 'Aqi ' + usAqiValue + ', ' + caution;
-      document.getElementById('coordinate').innerText = 'Latitude: ' + latitude + ', Longitude: ' + longitude;
-      document.getElementById('currentTime').innerText = 'Time: ' + formattedDateTime;
-
-      // Set background color based on usAqiValue
-      setBackgroundColor(usAqiValue);
-
-      // Populate the forecast table
-      populateForecastTable(weatherData.hourly);
-    })
-.catch(error => {
-  console.error('Error fetching weather data:', error);
-});
+      fetch(osm)
+      .then(response => response.json())
+      .then(locationData => {
+        // Extract and display the display_name in the "location" div
+        const displayName = locationData.display_name || 'Not found';
+        document.getElementById('location').innerHTML = '<p>Location: ' + displayName + '</p>';
+      })
+      .catch(error => {
+        console.error('Error fetching location data:', error);
+      });
+    }
 
     // Function to format date and time
     function formatDateTime(dateTimeString) {
@@ -286,15 +305,16 @@ function setBackgroundColor(aqiValue) {
       }
     }
 
+// Initial fetch for location data
+fetchLocationData();
 
 
+</script>
 
-  </script>
-
-  <!-- Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 </body>
 </html>
