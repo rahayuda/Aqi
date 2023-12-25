@@ -1,0 +1,22 @@
+.container {
+  border: 1px solid #343a40;
+  border-radius: 8px;
+}
+
+#backgroundDiv {
+  border: 1px solid #343a40;
+  border-radius: 5px;
+}
+
+.table {
+  width: 100%;
+}
+
+.img-fluid {
+  border-radius: 5px;
+}
+
+.box {
+  border: 1px solid #343a40; 
+  border-radius: 5px;
+}
