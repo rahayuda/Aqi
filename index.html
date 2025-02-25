@@ -7,14 +7,12 @@
 <meta name="description" content="Cek Indeks Kualitas Udara (AQI) secara real-time dengan informasi prakiraan polusi udara dan peringatan kesehatan." />
 <meta name="keywords" content="AQI, Air Quality Index, polusi udara, kualitas udara, prakiraan AQI" />
 <meta name="author" content="I Gede Surya Rahayuda" />
-
 <!-- Open Graph (Untuk preview di media sosial) -->
 <meta property="og:title" content="Air Quality Index - Cek Kualitas Udara" />
 <meta property="og:description" content="Cek Indeks Kualitas Udara (AQI) secara real-time dengan prakiraan dan peringatan kesehatan." />
-<meta property="og:image" content="https://contoh.com/images/aqi-preview.jpg" />
+<meta property="og:image" content="https://raw.githubusercontent.com/rahayuda/Aqi/main/images/aqi.png?raw=true" />
 <meta property="og:url" content="https://aqipollution.vercel.app/" />
 <meta property="og:type" content="website" />
-
   
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -32,6 +30,9 @@
 
 </head>
 <body>
+<h1>Air Quality Index</h1>
+<h2>Forecast</h2>
+<h2>Visitors</h2>
 
   <div class="p-4">
 
@@ -41,16 +42,15 @@
 
       <div class="row">
         <div class="col-sm mb-4">
-          <img src="images/pollution.gif" alt="Alt Text" class="img-fluid" width="100%">
+          <img src="images/pollution.gif" alt="Ilustrasi polusi udara dan dampaknya" class="img-fluid" width="100%">
 </div>
         <div class="col-sm-4">
           <h5 id="category" class="mt-0 text-lg"></h5>
           <hr>
-          <p>
-            <div class="p-3" id="backgroundDiv"><div id="usAqiValue"></div></div>
-            <div class="p-3 mt-2 box"><div id="location"></div></div>             
-            <div class="p-3 mt-2 box"><div id="coordinate"></div></div>           
-          </p>
+<div class="p-3" id="backgroundDiv"><div id="usAqiValue"></div></div>
+<div class="p-3 mt-2 box"><div id="location"></div></div>             
+<div class="p-3 mt-2 box"><div id="coordinate"></div></div>           
+
         </div> 
       </div>
       <hr>
