@@ -2,128 +2,107 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
-<meta name="description" content="Cek Indeks Kualitas Udara (AQI) secara real-time dengan informasi prakiraan polusi udara dan peringatan kesehatan." />
-<meta name="keywords" content="AQI, Air Quality Index, polusi udara, kualitas udara, prakiraan AQI" />
-<meta name="author" content="I Gede Surya Rahayuda" />
-<!-- Open Graph (Untuk preview di media sosial) -->
-<meta property="og:title" content="Air Quality Index - Cek Kualitas Udara" />
-<meta property="og:description" content="Cek Indeks Kualitas Udara (AQI) secara real-time dengan prakiraan dan peringatan kesehatan." />
-<meta property="og:image" content="https://imgur.com/a/Q14UhCu" />
-<meta property="og:url" content="https://aqipollution.vercel.app/" />
-<meta property="og:type" content="website" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index, follow">
+  <meta name="description" content="Cek Indeks Kualitas Udara (AQI) secara real-time dengan informasi prakiraan polusi udara dan peringatan kesehatan.">
+  <meta name="keywords" content="AQI, Air Quality Index, polusi udara, kualitas udara, prakiraan AQI">
+  <meta name="author" content="I Gede Surya Rahayuda">
+  
+  <!-- Open Graph (Untuk preview di media sosial) -->
+  <meta property="og:title" content="Air Quality Index - Cek Kualitas Udara">
+  <meta property="og:description" content="Cek Indeks Kualitas Udara (AQI) secara real-time dengan prakiraan dan peringatan kesehatan.">
+  <meta property="og:image" content="https://i.imgur.com/Q14UhCu.jpg">
+  <meta property="og:url" content="https://aqipollution.vercel.app/">
+  <meta property="og:type" content="website">
+  
+  <title>Air Quality Index</title>
   
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <title>Air Quality Index</title>
- 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-BG9CZTS3ET"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-BG9CZTS3ET');
-</script>
-
+  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BG9CZTS3ET"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-BG9CZTS3ET');
+  </script>
 </head>
 <body>
   <div class="p-4">
-
     <div class="container mt-4 p-4">
       <h1>Air Quality Index</h1>
       <hr>
-
+      
       <div class="row">
         <div class="col-sm mb-4">
-          <img src="images/pollution.gif" alt="Ilustrasi polusi udara dan dampaknya" class="img-fluid" width="100%">
-</div>
+          <img src="images/pollution.gif" alt="Ilustrasi polusi udara dan dampaknya" class="img-fluid w-100">
+        </div>
         <div class="col-sm-4">
-          <h5 id="category" class="mt-0 text-lg"></h5>
+          <h5 id="category" class="mt-0 fs-4 fw-bold"></h5>
           <hr>
-<div class="p-3" id="backgroundDiv"><div id="usAqiValue"></div></div>
-<div class="p-3 mt-2 box"><div id="location"></div></div>             
-<div class="p-3 mt-2 box"><div id="coordinate"></div></div>           
-
+          <div class="p-3" id="backgroundDiv"><div id="usAqiValue"></div></div>
+          <div class="p-3 mt-2 box"><div id="location"></div></div>             
+          <div class="p-3 mt-2 box"><div id="coordinate"></div></div>           
         </div> 
       </div>
+      
       <hr>
-      <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#inputModal">
+      <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#inputModal">
         Configuration
       </button>  
     </div>
-
+    
     <div class="container mt-4 p-4">
       <h2>Forecast</h2>
-      <div class="table table-responsive">
+      <div class="table-responsive">
         <table class="table">
           <thead>
             <tr>
-              <th scope="col">Time</th>
-              <th scope="col">Aqi</th>
-              <th scope="col">Category</th>
-              <th scope="col">Caution</th>
+              <th>Time</th>
+              <th>AQI</th>
+              <th>Category</th>
+              <th>Caution</th>
             </tr>
           </thead>
           <tbody id="forecastTableBody"></tbody>
         </table>
       </div>
     </div>
-
+    
     <div class="container mt-4 mb-4 p-4">
       <h2>Visitors</h2>
       <hr>
-<!-- Default Statcounter code for Air Quality Index
-https://aqipollution.vercel.app/ -->
-<script async src="https://statcounter.com/counter/counter.js"></script>
-<script>
-  var sc_project = 13093386;
-  var sc_invisible = 0;
-  var sc_security = "ab377328";
-  var sc_text = 2;
-</script>
-
-<noscript><div class="statcounter"><a title="Web Analytics
-Made Easy - Statcounter" href="https://statcounter.com/"
-target="_blank"><img class="statcounter"
-src="https://c.statcounter.com/13093386/0/ab377328/0/"
-alt="Web Analytics Made Easy - Statcounter"
-referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-<!-- End of Statcounter Code -->
-<a href="https://statcounter.com/p13093386/?guest=1" rel="nofollow">Visitors</a>
+      <script async src="https://statcounter.com/counter/counter.js"></script>
+      <noscript>
+        <div class="statcounter">
+          <a title="Web Analytics Made Easy - Statcounter" href="https://statcounter.com/" target="_blank">
+            <img class="statcounter" src="https://c.statcounter.com/13093386/0/ab377328/0/" alt="Web Analytics Made Easy - Statcounter" referrerpolicy="no-referrer-when-downgrade">
+          </a>
+        </div>
+      </noscript>
+      <a href="https://statcounter.com/p13093386/?guest=1" rel="nofollow">Visitors</a>
+    </div>
   </div>
-  </div>
-    
+  
   <!-- Modal untuk memasukkan data -->
-  <div class="modal fade" id="inputModal" tabindex="-1" role="dialog" aria-labelledby="inputModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+  <div class="modal fade" id="inputModal" tabindex="-1" aria-labelledby="inputModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="inputModalLabel">Configuration</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <form>
-            <div class="form-group">
-              <label for="latitude">Latitude</label>
-              <input type="text" class="form-control" id="latitudeInput" placeholder="Enter latitude">
-            </div>
-            <div class="form-group">
-              <label for="longitude">Longitude</label>
-              <input type="text" class="form-control" id="longitudeInput" placeholder="Enter longitude">
-            </div>
-            <div class="form-group">
-              <label for="forecastDays">Forecast Days</label>
-              <input type="number" class="form-control" id="forecastDaysInput" placeholder="Enter forecast days">
-            </div>
+            <input type="text" class="form-control mb-2" id="latitudeInput" placeholder="Enter latitude">
+            <input type="text" class="form-control mb-2" id="longitudeInput" placeholder="Enter longitude">
+            <input type="number" class="form-control mb-2" id="forecastDaysInput" placeholder="Enter forecast days">
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="button" class="btn btn-dark" onclick="updateData()">Update</button>
         </div>
       </div>
@@ -131,12 +110,6 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
   </div>
 
   <script src="script.js"></script>
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<noscript>
-  <p>JavaScript diperlukan untuk melihat halaman ini dengan benar.</p>
-</noscript>
- 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
